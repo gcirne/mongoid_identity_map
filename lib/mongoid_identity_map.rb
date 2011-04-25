@@ -1,1 +1,1 @@
-require "mongoid/collection/identity_mappable"
+require "mongoid_identity_map/identity_mappable"
