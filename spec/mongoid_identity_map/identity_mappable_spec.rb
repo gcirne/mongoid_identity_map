@@ -17,6 +17,6 @@ describe MongoidIdentityMap::IdentityMappable do
       end
     end
 
-    context "when object exists in identity map"
+    context "when document exists in identity map"
   end
 end
