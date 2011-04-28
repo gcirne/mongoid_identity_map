@@ -10,7 +10,9 @@ module MongoidIdentityMap
     end
 
     def find_one_with_identity_map(selector = {}, options = {})
-      find_one_without_identity_map(selector, options)
+      IdentityMap.fetch(selector) do
+        find_one_without_identity_map(selector, options)
+      end
     end
   end
 end
