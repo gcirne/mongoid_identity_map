@@ -1,5 +1,4 @@
 require "mongoid_identity_map"
-require "mongoid_identity_map/clear_middleware"
 require "mongoid"
 require "support/model"
 

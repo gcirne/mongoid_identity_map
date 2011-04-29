@@ -5,8 +5,9 @@ module MongoidIdentityMap
     end
     
     def call(env)
-      @app.call(env)
+      res = @app.call(env)
       CurrentThreadHash.clear
+      res
     end
   end
 end
