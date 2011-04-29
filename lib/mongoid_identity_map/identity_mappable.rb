@@ -10,7 +10,7 @@ module MongoidIdentityMap
     end
 
     def find_one_with_identity_map(selector = {}, options = {})
-      IdentityMap.fetch(selector) do
+      IdentityMap.fetch(selector.merge(:_collection_name => self.name)) do
         find_one_without_identity_map(selector, options)
       end
     end
