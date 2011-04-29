@@ -13,15 +13,11 @@ describe MongoidIdentityMap::IdentityMap do
       end
 
       it "should return document from database" do
-        MongoidIdentityMap::IdentityMap.fetch(@selector) do
-          Model.collection.find_one_without_identity_map(@selector)
-        end.should be(@model)
+        perform_fetch.should be(@model)
       end
 
       it "should set document in identity map" do
-        MongoidIdentityMap::IdentityMap.fetch(@selector) do
-          Model.collection.find_one_without_identity_map(@selector)
-        end
+        perform_fetch
         MongoidIdentityMap::IdentityMap.send(:get, @selector).should be(@model)
       end
     end
@@ -32,16 +28,18 @@ describe MongoidIdentityMap::IdentityMap do
       end
 
       it "should return document from identity map" do
-        MongoidIdentityMap::IdentityMap.fetch(@selector) do
-          Model.collection.find_one_without_identity_map(@selector)
-        end.should be(@model)
+        perform_fetch.should be(@model)
       end
 
       it "should not hit database" do
         Model.collection.should_not_receive(:find_one_without_identity_map)
-        MongoidIdentityMap::IdentityMap.fetch(@selector) do
-          Model.collection.find_one_without_identity_map(@selector)
-        end
+        perform_fetch
+      end
+    end
+
+    def perform_fetch
+      MongoidIdentityMap::IdentityMap.fetch(@selector) do
+        Model.collection.find_one_without_identity_map(@selector)
       end
     end
   end
