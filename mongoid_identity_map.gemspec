@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.email       = ["gcirne@gmail.com"]
   s.homepage    = "http://rubygems.org/gems/mongoid_identity_map"
   s.summary     = "IdentityMap for Mongoid"
-  s.description = "Simple and transparent IdentityMap implementation for Mongoid"
+  s.description = "Simple and transparent Identity Map implementation for Mongoid"
 
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "mongoid_identity_map"
