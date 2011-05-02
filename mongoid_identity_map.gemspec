@@ -14,8 +14,8 @@ Gem::Specification.new do |s|
   s.required_rubygems_version = ">= 1.3.6"
   s.rubyforge_project         = "mongoid_identity_map"
 
-  s.add_dependency "activesupport", "~> 3.0.0"
-  s.add_dependency "mongoid", "~> 2.0.0"
+  s.add_dependency "activesupport", "~> 3.0"
+  s.add_dependency "mongoid", "~> 2.0"
 
   s.add_development_dependency "bson_ext", ">= 1.3.0"
   s.add_development_dependency "bundler", ">= 1.0.0"
