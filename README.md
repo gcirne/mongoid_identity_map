@@ -29,5 +29,6 @@ In Rails add the following to environment.rb or to environment specific file:
 Current Limitations
 -------------------
 
-Contributing
-------------
+Currently, it's an all or nothing deal. It is not possible to turn the identiy map on or off on a class (Mongoid::Document) basis.
+
+Identity map is applied only on Mongoid's Collection find_one method. The find method doesn't have the identity map applied.
