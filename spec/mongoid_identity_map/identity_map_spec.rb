@@ -7,6 +7,12 @@ describe MongoidIdentityMap::IdentityMap do
   end
   
   describe ".fetch" do
+    let (:fetch) do
+      MongoidIdentityMap::IdentityMap.fetch(@selector) do
+        Model.collection.find_one_without_identity_map(@selector)
+      end
+    end
+
     context "when document doesn't exist in identity map" do
       before do
         MongoidIdentityMap::CurrentThreadHash.stub!(:get).with(@selector).and_return(nil)
@@ -36,12 +42,6 @@ describe MongoidIdentityMap::IdentityMap do
       it "should not hit database" do
         Model.collection.should_not_receive(:find_one_without_identity_map)
         fetch
-      end
-    end
-
-    def fetch
-      MongoidIdentityMap::IdentityMap.fetch(@selector) do
-        Model.collection.find_one_without_identity_map(@selector)
       end
     end
   end
