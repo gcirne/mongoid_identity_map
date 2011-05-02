@@ -17,11 +17,9 @@ In Gemfile:
 
 ## Configuration
 
-Add rack middleware for clearing identity map after each request.
+Add rack middleware `MongoidIdentityMap::ClearMiddleware` for clearing identity map after each request.
 
-In Rails add the following to environment.rb or to environment specific file:
-
-    config.middleware.use MongoidIdentityMap::ClearMiddleware
+When using this gem in a Rails app this is done automatically.
 
 ## Current Limitations
 
