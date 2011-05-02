@@ -14,7 +14,7 @@ describe MongoidIdentityMap::ClearMiddleware do
   end
   
   it "should clear identity map" do
-    MongoidIdentityMap::CurrentThreadHash.should_receive(:clear)
+    MongoidIdentityMap::IdentityMap.should_receive(:clear)
     @clear_middleware.call(@env)
   end
 end

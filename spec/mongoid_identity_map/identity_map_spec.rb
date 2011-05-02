@@ -25,7 +25,7 @@ describe MongoidIdentityMap::IdentityMap do
       end
 
       it "should set document in identity map" do
-        MongoidIdentityMap::CurrentThreadHash.stub!(:set).with(@selector, @model)
+        MongoidIdentityMap::CurrentThreadHash.should_receive(:set).with(@selector, @model)
         fetch
       end
     end
@@ -43,6 +43,13 @@ describe MongoidIdentityMap::IdentityMap do
         Model.collection.should_not_receive(:find_one_without_identity_map)
         fetch
       end
+    end
+  end
+
+  describe ".clear" do
+    it "should clear identity map" do
+      MongoidIdentityMap::CurrentThreadHash.should_receive(:clear)
+      MongoidIdentityMap::IdentityMap.clear
     end
   end
 end
