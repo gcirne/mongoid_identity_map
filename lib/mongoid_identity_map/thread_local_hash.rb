@@ -1,12 +1,12 @@
 module MongoidIdentityMap
-  class CurrentThreadHash
+  class ThreadLocalHash
     class << self
       def get(key)
-        current_thread_hash[key]
+        thread_local_hash[key]
       end
       
       def set(key, value)
-        current_thread_hash[key] = value
+        thread_local_hash[key] = value
       end
       
       def clear
@@ -15,7 +15,7 @@ module MongoidIdentityMap
       
       private
       
-      def current_thread_hash
+      def thread_local_hash
         Thread.current[:mongoid_identity_map_current_thread_hash] ||= Hash.new
       end
     end

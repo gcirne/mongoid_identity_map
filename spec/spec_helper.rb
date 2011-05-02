@@ -7,6 +7,6 @@ RSpec.configure do |config|
   config.run_all_when_everything_filtered = true
   
   config.before(:each) do
-    MongoidIdentityMap::CurrentThreadHash.clear
+    MongoidIdentityMap::IdentityMap.clear
   end
 end

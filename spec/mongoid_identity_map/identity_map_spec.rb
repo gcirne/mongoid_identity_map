@@ -15,7 +15,7 @@ describe MongoidIdentityMap::IdentityMap do
 
     context "when document doesn't exist in identity map" do
       before do
-        MongoidIdentityMap::CurrentThreadHash.stub!(:get).with(@selector).and_return(nil)
+        MongoidIdentityMap::ThreadLocalHash.stub!(:get).with(@selector).and_return(nil)
         Model.collection.stub!(:find_one_without_identity_map).with(@selector).and_return(@model)
       end
 
@@ -25,14 +25,14 @@ describe MongoidIdentityMap::IdentityMap do
       end
 
       it "should set document in identity map" do
-        MongoidIdentityMap::CurrentThreadHash.should_receive(:set).with(@selector, @model)
+        MongoidIdentityMap::ThreadLocalHash.should_receive(:set).with(@selector, @model)
         fetch
       end
     end
 
     context "when document exists in identity map" do
       before do
-        MongoidIdentityMap::CurrentThreadHash.stub!(:get).with(@selector).and_return(@model)
+        MongoidIdentityMap::ThreadLocalHash.stub!(:get).with(@selector).and_return(@model)
       end
 
       it "should return document from identity map" do
@@ -48,7 +48,7 @@ describe MongoidIdentityMap::IdentityMap do
 
   describe ".clear" do
     it "should clear identity map" do
-      MongoidIdentityMap::CurrentThreadHash.should_receive(:clear)
+      MongoidIdentityMap::ThreadLocalHash.should_receive(:clear)
       MongoidIdentityMap::IdentityMap.clear
     end
   end

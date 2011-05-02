@@ -3,11 +3,11 @@ module MongoidIdentityMap
 
     class << self
       def fetch(selector)
-        CurrentThreadHash.get(selector) || CurrentThreadHash.set(selector, yield)
+        ThreadLocalHash.get(selector) || ThreadLocalHash.set(selector, yield)
       end
 
       def clear
-        CurrentThreadHash.clear
+        ThreadLocalHash.clear
       end
     end
     
