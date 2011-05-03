@@ -17,4 +17,4 @@ module MongoidIdentityMap
   end
 end
 
-Mongoid::Collection.send(:include, MongoidIdentityMap::IdentityMappable)
+Mongoid::Collection.send(:include, MongoidIdentityMap::IdentityMappable) unless defined?(Rails) && Rails.env.test?
