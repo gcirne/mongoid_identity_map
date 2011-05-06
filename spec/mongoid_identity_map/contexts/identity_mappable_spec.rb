@@ -11,7 +11,7 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
   
   describe "#one" do
     let(:selector) do
-      {}
+      {:selector => :value}
     end
     
     before do
