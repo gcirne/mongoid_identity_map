@@ -1,5 +1,4 @@
-require 'active_support/core_ext'
-require 'mongoid/collection'
+require "active_support/core_ext"
 
 module MongoidIdentityMap
   module IdentityMappable

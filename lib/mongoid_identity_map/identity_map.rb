@@ -6,6 +6,10 @@ module MongoidIdentityMap
         ThreadLocalHash.get(selector) || ThreadLocalHash.set(selector, yield)
       end
 
+      def remove(document)
+        ThreadLocalHash.remove(document)
+      end
+
       def clear
         ThreadLocalHash.clear
       end

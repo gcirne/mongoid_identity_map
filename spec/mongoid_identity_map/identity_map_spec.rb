@@ -39,10 +39,17 @@ describe MongoidIdentityMap::IdentityMap do
         fetch.should be(@model)
       end
 
-      it "should not hit database" do
+      it "should not call block" do
         Model.collection.should_not_receive(:find_one_without_identity_map)
         fetch
       end
+    end
+  end
+
+  describe ".remove" do
+    it "should remove document from identity map" do
+      MongoidIdentityMap::ThreadLocalHash.should_receive(:remove).with(@model)
+      MongoidIdentityMap::IdentityMap.remove(@model)
     end
   end
 

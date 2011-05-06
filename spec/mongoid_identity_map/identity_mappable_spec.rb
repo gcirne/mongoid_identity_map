@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe MongoidIdentityMap::IdentityMappable do
   describe "#find_one" do
