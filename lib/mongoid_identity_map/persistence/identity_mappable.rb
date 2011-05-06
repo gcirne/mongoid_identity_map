@@ -17,4 +17,8 @@ module MongoidIdentityMap
   end
 end
 
-Mongoid::Document.send(:include, MongoidIdentityMap::Persistence::IdentityMappable)
+module Mongoid::Persistence
+  included do
+    include MongoidIdentityMap::Persistence::IdentityMappable
+  end
+end
