@@ -8,11 +8,15 @@ module MongoidIdentityMap
       def set(key, value)
         thread_local_hash[key] = value
       end
-
+      
       def remove(value)
         thread_local_hash.delete_if {|k, v| v == value}
       end
-
+      
+      def values
+        thread_local_hash.values
+      end
+      
       def clear
         Thread.current[:mongoid_identity_map_current_thread_hash] = nil
       end

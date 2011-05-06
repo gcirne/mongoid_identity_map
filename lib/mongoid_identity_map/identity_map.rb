@@ -3,7 +3,7 @@ module MongoidIdentityMap
 
     class << self
       def fetch(selector)
-        ThreadLocalHash.get(selector) || ThreadLocalHash.set(selector, yield)
+        ThreadLocalHash.get(selector) || set_document_guaranteeing_same_instance(selector, yield)
       end
 
       def remove(document)
@@ -12,6 +12,12 @@ module MongoidIdentityMap
 
       def clear
         ThreadLocalHash.clear
+      end
+      
+      private
+      
+      def set_document_guaranteeing_same_instance(selector, document)
+        ThreadLocalHash.set(selector, ThreadLocalHash.values.detect {|value| value == document} || document)
       end
     end
     
