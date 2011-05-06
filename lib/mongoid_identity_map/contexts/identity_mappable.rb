@@ -1,7 +1,7 @@
 require "active_support/core_ext"
 
 module MongoidIdentityMap
-  module Mongo
+  module Contexts
     module IdentityMappable
       extend ActiveSupport::Concern
       
@@ -21,4 +21,4 @@ module MongoidIdentityMap
   end
 end
 
-Mongoid::Contexts::Mongo.send(:include, MongoidIdentityMap::Mongo::IdentityMappable)
+Mongoid::Contexts::Mongo.send(:include, MongoidIdentityMap::Contexts::IdentityMappable)

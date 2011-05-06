@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe MongoidIdentityMap::Mongo::IdentityMappable do
+describe MongoidIdentityMap::Contexts::IdentityMappable do
   let(:model) do
     Model.new
   end
