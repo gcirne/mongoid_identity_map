@@ -8,12 +8,12 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
   let(:model_attributes) do
     model.attributes
   end
+
+  let(:selector) do
+    {:selector => :value}
+  end
   
   describe "#one" do
-    let(:selector) do
-      {:selector => :value}
-    end
-    
     before do
       Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
     end
@@ -29,10 +29,6 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
   end
   
   describe "#first" do
-    let(:selector) do
-      {:selector => :value}
-    end
-    
     before do
       Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
     end
