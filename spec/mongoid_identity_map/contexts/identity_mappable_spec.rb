@@ -17,14 +17,14 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
     before do
       Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
     end
-    
-    it "should return model" do
-      Model.where(selector).one.should == model
-    end
-    
-    it "should fetch model from identity map" do
+
+    it "should fetch model from identity map under key comprised of find selector merged with model class" do
       MongoidIdentityMap::IdentityMap.should_receive(:fetch).with(selector.merge(:_klass => Model))
       Model.where(selector).one
+    end
+
+    it "should return model" do
+      Model.where(selector).one.should == model
     end
   end
   
@@ -32,14 +32,14 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
     before do
       Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
     end
-    
-    it "should return model" do
-      Model.where(selector).first.should == model
-    end
-    
-    it "should fetch model from identity map" do
+
+    it "should fetch model from identity map under key comprised of find selector merged with model class" do
       MongoidIdentityMap::IdentityMap.should_receive(:fetch).with(selector.merge(:_klass => Model))
       Model.where(selector).first
+    end
+
+    it "should return model" do
+      Model.where(selector).first.should == model
     end
   end
 end
