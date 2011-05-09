@@ -9,20 +9,24 @@ Mongoid Identity Map is a simple and transparent Identity Map implementation for
 
 [Identity Map pattern](http://martinfowler.com/eaaCatalog/identityMap.html)
 
-## Installation
+## Installing
 
 In Gemfile:
 
     gem "mongoid_identity_map"
 
-## Configuration
+## Using
 
-Add rack middleware `MongoidIdentityMap::ClearMiddleware` for clearing identity map after each request.
+Identity map is applied automatically to all queries that return a single model.
 
-When using this gem in a Rails app this is done automatically.
+## Clearing the identity map
 
-## Current Limitations
+A rack middleware - `MongoidIdentityMap::ClearMiddleware` - is provided for clearing the identity map after each request. In a Rails app, this middleware is automatically added to the list of middlewares.
+
+You can also clear the identity map by calling `MongoidIdentityMap::IdentityMap.clear`.
+
+## Current limitations
 
 Currently, it's an all or nothing deal. It is not possible to turn the identiy map on or off on a class (Mongoid::Document) basis.
 
-Identity map is applied only on Mongoid's Collection find_one method. The find method doesn't have the identity map applied.
+Identity map is applied only on queries that return a single model. Queries that return a cursor are not affected.
