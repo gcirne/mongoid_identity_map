@@ -1,110 +1,98 @@
 require "spec_helper"
 
 describe MongoidIdentityMap::IdentityMap do
-  let(:model) do
-    Model.new(attributes)
-  end
-  
-  let(:attributes) do
-    {:_id => BSON::ObjectId("4da13240312f916cd2000002")}
-  end
-  
-  let(:selector) do
-    {:_id => BSON::ObjectId("4da13240312f916cd2000002")}
-  end
-  
-  describe ".fetch" do
-    let(:stub_model_find) do
-      where = stub("where")
-      Model.stub!(:where).with(selector).and_return(where)
-      where.stub!(:first).and_return(model)
-    end
-    
-    let(:fetch) do
-      MongoidIdentityMap::IdentityMap.fetch(selector) do
-        Model.where(selector).first
+  let(:model) {Model.new}
+  let(:other_model) {Model.new}
+  let(:key) {:key}
+  let(:other_key) {:key2}
+
+  describe "storage" do
+    describe "in multiple threads" do
+      let(:other_model) {Model.new}
+
+      it "should keep each thread's storage separate" do
+        MongoidIdentityMap::IdentityMap.set(:key, model)
+
+        Thread.new do
+          MongoidIdentityMap::IdentityMap.set(:key, other_model)
+          MongoidIdentityMap::IdentityMap.get(:key).should == other_model
+        end.join
+
+        MongoidIdentityMap::IdentityMap.get(:key).should == model
       end
+    end
+
+    describe "when the same model is stored under different keys" do
+      let(:same_model_different_instance) {Model.new(model.attributes)}
+
+      it "should store the same instance of the model under the different keys" do
+        MongoidIdentityMap::IdentityMap.set(:key, model)
+        MongoidIdentityMap::IdentityMap.set(:key2, same_model_different_instance)
+        MongoidIdentityMap::IdentityMap.get(:key).should be(model)
+        MongoidIdentityMap::IdentityMap.get(:key2).should be(model)
+      end
+    end
+  end
+
+  describe ".fetch" do
+    let(:fetch) do
+      MongoidIdentityMap::IdentityMap.fetch(key) do
+        Model.first
+      end
+    end
+
+    before do
+      Model.stub!(:first).and_return(model)
     end
 
     context "when model doesn't exist in identity map" do
-      before do
-        MongoidIdentityMap::ThreadLocalHash.stub!(:get).with(selector).and_return(nil)
-        stub_model_find
+      it "should store model in identity map" do
+        fetch
+        MongoidIdentityMap::IdentityMap.get(key).should be(model)
       end
 
       it "should return model" do
-        where = stub("where")
-        Model.should_receive(:where).with(selector).and_return(where)
-        where.should_receive(:first).and_return(model)
-        
         fetch.should be(model)
-      end
-
-      it "should set model in identity map" do
-        MongoidIdentityMap::ThreadLocalHash.should_receive(:set).with(selector, model)
-        fetch
       end
     end
 
     context "when model exists in identity map" do
       before do
-        MongoidIdentityMap::ThreadLocalHash.stub!(:get).with(selector).and_return(model)
+        MongoidIdentityMap::IdentityMap.set(key, model)
+      end
+
+      it "should not yield block" do
+        Model.should_not_receive(:first)
+        fetch
       end
 
       it "should return model" do
         fetch.should be(model)
       end
-
-      it "should not call block" do
-        Model.should_not_receive(:where)
-        fetch
-      end
-    end
-    
-    context "when different instances of the same model exist in identity map more than once under different selectors" do
-      let(:different_instance_of_the_same_model) do
-        Model.new(attributes)
-      end
-      
-      let(:different_selector) do
-        selector.merge(:key => :value)
-      end
-      
-      let(:stub_different_model_find) do
-        different_where = stub("different_where")
-        Model.stub!(:where).with(different_selector).and_return(different_where)
-        different_where.stub!(:first).and_return(different_instance_of_the_same_model)
-      end
-      
-      let(:fetch_with_different_selector) do
-        MongoidIdentityMap::IdentityMap.fetch(different_selector) do
-          Model.where(different_selector).first
-        end
-      end
-      
-      before :each do
-        stub_model_find
-        stub_different_model_find
-      end
-      
-      it "should always return same model instance" do
-        fetch
-        fetch_with_different_selector.should be(model)
-      end
     end
   end
 
   describe ".remove" do
+    before do
+      MongoidIdentityMap::IdentityMap.set(key, model)
+    end
+
     it "should remove model from identity map" do
-      MongoidIdentityMap::ThreadLocalHash.should_receive(:remove).with(model)
       MongoidIdentityMap::IdentityMap.remove(model)
+      MongoidIdentityMap::IdentityMap.get(key).should be_nil
     end
   end
 
   describe ".clear" do
+    before do
+      MongoidIdentityMap::IdentityMap.set(key, model)
+      MongoidIdentityMap::IdentityMap.set(other_key, other_model)
+    end
+
     it "should clear identity map" do
-      MongoidIdentityMap::ThreadLocalHash.should_receive(:clear)
       MongoidIdentityMap::IdentityMap.clear
+      MongoidIdentityMap::IdentityMap.get(key).should be_nil
+      MongoidIdentityMap::IdentityMap.get(other_key).should be_nil
     end
   end
 end

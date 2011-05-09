@@ -2,22 +2,30 @@ module MongoidIdentityMap
   class IdentityMap
 
     class << self
-      def fetch(selector)
-        ThreadLocalHash.get(selector) || set_document_guaranteeing_same_instance(selector, yield)
+      def set(key, model)
+        thread_local_hash[key] = thread_local_hash.values.detect {|value| value == model} || model
       end
 
-      def remove(document)
-        ThreadLocalHash.remove(document)
+      def get(key)
+        thread_local_hash[key]
+      end
+
+      def fetch(key)
+        get(key) || set(key, yield)
+      end
+
+      def remove(model)
+        thread_local_hash.delete_if {|key, value| value == model}
       end
 
       def clear
-        ThreadLocalHash.clear
+        Thread.current[:mongoid_identity_map_current_thread_hash] = nil
       end
       
       private
-      
-      def set_document_guaranteeing_same_instance(selector, document)
-        ThreadLocalHash.set(selector, ThreadLocalHash.values.detect {|value| value == document} || document)
+
+      def thread_local_hash
+        Thread.current[:mongoid_identity_map_current_thread_hash] ||= Hash.new
       end
     end
     
