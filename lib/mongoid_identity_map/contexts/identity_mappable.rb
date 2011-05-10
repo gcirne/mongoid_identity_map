@@ -8,15 +8,28 @@ module MongoidIdentityMap
       included do
         alias_method_chain :one, :identity_map
         alias_method_chain :first, :identity_map
+        alias_method_chain :last, :identity_map
       end
       
       def one_with_identity_map
+        fetch(:one_without_identity_map)
+      end
+
+      def first_with_identity_map
+        fetch(:first_without_identity_map)
+      end
+
+      def last_with_identity_map
+        fetch(:last_without_identity_map)
+      end
+
+      private
+
+      def fetch(method)
         IdentityMap.fetch(selector.merge(:_klass => klass)) do
-          one_without_identity_map
+          send(method)
         end
       end
-      alias :first_with_identity_map :one_with_identity_map
-      
     end
   end
 end

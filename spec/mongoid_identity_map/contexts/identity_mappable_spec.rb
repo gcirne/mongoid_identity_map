@@ -12,34 +12,40 @@ describe MongoidIdentityMap::Contexts::IdentityMappable do
   let(:selector) do
     {:selector => :value}
   end
-  
-  describe "#one" do
+
+  shared_examples_for "methods that return a single model" do
     before do
-      Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
+      Model.collection.stub!(:find_one).with(selector, options).and_return(model_attributes)
     end
 
     it "should fetch model from identity map under key comprised of find selector merged with model class" do
       MongoidIdentityMap::IdentityMap.should_receive(:fetch).with(selector.merge(:_klass => Model))
-      Model.where(selector).one
+      find
     end
 
     it "should return model" do
-      Model.where(selector).one.should == model
+      find.should == model
+    end
+  end
+  
+  describe "#one" do
+    it_should_behave_like "methods that return a single model" do
+      let(:find) {Model.where(selector).one}
+      let(:options) {{}}
     end
   end
   
   describe "#first" do
-    before do
-      Model.collection.stub!(:find_one).with(selector, {}).and_return(model_attributes)
+    it_should_behave_like "methods that return a single model" do
+      let(:find) {Model.where(selector).first}
+      let(:options) {{}}
     end
+  end
 
-    it "should fetch model from identity map under key comprised of find selector merged with model class" do
-      MongoidIdentityMap::IdentityMap.should_receive(:fetch).with(selector.merge(:_klass => Model))
-      Model.where(selector).first
-    end
-
-    it "should return model" do
-      Model.where(selector).first.should == model
+  describe "#last" do
+    it_should_behave_like "methods that return a single model" do
+      let(:find) {Model.where(selector).last}
+      let(:options) {{:sort=>[[:_id, :desc]]}}
     end
   end
 end
