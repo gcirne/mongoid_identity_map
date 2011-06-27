@@ -73,6 +73,8 @@ describe MongoidIdentityMap::IdentityMap do
   end
 
   describe ".remove" do
+    let(:same_model_different_instance) {Model.new(model.attributes)}
+
     before do
       MongoidIdentityMap::IdentityMap.set(key, model)
     end
@@ -80,6 +82,16 @@ describe MongoidIdentityMap::IdentityMap do
     it "should remove model from identity map" do
       MongoidIdentityMap::IdentityMap.remove(model)
       MongoidIdentityMap::IdentityMap.get(key).should be_nil
+    end
+
+    it "should remove every occurrence of a model from identity map" do
+      MongoidIdentityMap::IdentityMap.set(:key, model)
+      MongoidIdentityMap::IdentityMap.set(:key2, model)
+      MongoidIdentityMap::IdentityMap.set(:key3, same_model_different_instance)
+      model.update
+      MongoidIdentityMap::IdentityMap.get(:key).should be_nil
+      MongoidIdentityMap::IdentityMap.get(:key2).should be_nil
+      MongoidIdentityMap::IdentityMap.get(:key3).should be_nil
     end
   end
 

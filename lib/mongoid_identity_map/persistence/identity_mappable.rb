@@ -7,11 +7,17 @@ module MongoidIdentityMap
 
       included do
         alias_method_chain :remove, :identity_map
+        alias_method_chain :update, :identity_map
       end
 
       def remove_with_identity_map(options = {})
         IdentityMap.remove(self)
         self.remove_without_identity_map(options)
+      end
+
+      def update_with_identity_map(options = {})
+        IdentityMap.remove(self)
+        self.update_without_identity_map(options)
       end
     end
   end
