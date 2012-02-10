@@ -1,6 +1,10 @@
 Mongoid Identity Map
 ====================
 
+## Deprecated
+
+Mongoid now has its own identity map. This project has been deprecated.
+
 ## About [![Build Status](http://travis-ci.org/gcirne/mongoid_identity_map.png)](http://travis-ci.org/gcirne/mongoid_identity_map)
 
 Mongoid Identity Map is a simple and transparent Identity Map implementation for the Mongoid ODM.
